@@ -34,9 +34,6 @@ def train_model(model, optimizer, criterion, scheduler, device, train_loader, nu
             print("Validation:")
             test_model(model, device, valid_loader)
         
-    
-    # test_model(model, device, valid_loader)
-        
     if PATH is not None:
         if isinstance(model, torch.nn.DataParallel):
             torch.save(model.module.state_dict(), PATH)

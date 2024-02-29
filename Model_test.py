@@ -33,12 +33,8 @@ def main(argv):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     torch.cuda.empty_cache()
     
-    
-    if platform == 'linux' or platform == 'linux2':
-        PATH = '/media/atpapadop/M.2 nvMe/EMB/models/Resnet50/'
-    else:
-        PATH = r'F:\\EMB\\models\\Resnet50\\'
-        
+    PATH = '/home/a/atpapadop/EMB/models/Resnet50/'
+
     model_load = 'train_0' if __input_file == '' else __input_file
     
     
