@@ -58,20 +58,16 @@ def main(argv):
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     torch.cuda.empty_cache()
-    
-    if platform == 'linux' or platform == 'linux2':
-        PATH = '/media/atpapadop/M.2 nvMe/EMB/models/Resnet50/'
-    else:
-        PATH = r'F:\\EMB\\models\\Resnet50\\'
         
-    
+    PATH = '/home/a/atpapadop/EMB/models/Resnet50/' 
+
     model_save = 'train_0' if __output_file == '' else __output_file
     
     SAVE_PATH = PATH + model_save
     
     del model_save
     
-    num_epochs = __epochs if __epochs != 0 else 2
+    num_epochs = __epochs if __epochs != 0 else 100
     batch_size = __batch_size if __batch_size != 0 else 128
     initial_learning_rate = __learning_rate if __learning_rate != 0 else 0.001
     scheduler_rate = __scheduler if __scheduler != 0 else 0.97
@@ -81,6 +77,7 @@ def main(argv):
     print("Batch Size: ", batch_size)
     print("Scheduler: ", scheduler_rate)
     print("Output File: ", SAVE_PATH)
+    print("Parallel: ",__parallel)
     
     model = torchvision.models.resnet50(weights = torchvision.models.ResNet50_Weights.IMAGENET1K_V2)
     model.fc = torch.nn.Linear(2048, 23)
