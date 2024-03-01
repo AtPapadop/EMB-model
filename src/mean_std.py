@@ -5,7 +5,7 @@ Created on Fri Mar  1 16:00:44 2024
 @author: Thanasis
 """
 import torch
-from Dataset import full_dataset, train_dataset
+from Dataset import train_dataset
 from torch.utils.data import DataLoader
 
 
