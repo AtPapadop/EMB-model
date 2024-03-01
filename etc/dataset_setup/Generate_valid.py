@@ -45,6 +45,7 @@ with open('valid_dataset.txt') as f:
     valid_files = f.read().splitlines()
     
 train_paths = list(os.path.join(train_data_path, valid_files[i]) for i in range(len(valid_files)))
+train_paths = list(map(lambda st: str.replace(st, '\\', '/'), train_paths))
 valid_paths = list(map(lambda st: str.replace(st, 'train', 'valid'), train_paths))
 valid_classes_paths = list(os.path.join(valid_data_path, classes[i]) for i in range(len(classes)))
 
