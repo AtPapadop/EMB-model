@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 
 def get_mean_std(loader):
     # Compute the mean and standard deviation of all pixels in the dataset
-    num_pixels = len(full_dataset) * 224 * 224
+    num_pixels = len(train_dataset) * 224 * 224
     mean = 0.0
     std = 0.0
     psum  = torch.tensor([0.0, 0.0, 0.0])
