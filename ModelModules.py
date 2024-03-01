@@ -30,7 +30,7 @@ def train_model(model, optimizer, criterion, scheduler, device, train_loader, nu
         accuracy = 100 * correct / len(train_dataset)
         print(f'Epoch {epoch+1}/{num_epochs}, Loss: {loss.item():.4f}, Accuracy: {accuracy:.4f}')
         
-        if (valid_loader is not None and (epoch+1)%5==0):
+        if (valid_loader is not None and (epoch+1)%10==0):
             print("Validation:")
             test_model(model, device, valid_loader)
         
