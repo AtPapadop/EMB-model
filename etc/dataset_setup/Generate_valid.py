@@ -49,7 +49,7 @@ valid_paths = list(map(lambda st: str.replace(st, 'train', 'valid'), train_paths
 valid_classes_paths = list(os.path.join(valid_data_path, classes[i]) for i in range(len(classes)))
 
 for i in range (len(valid_classes_paths)):
-    os.mkdir(valid_classes_paths[i])
+    os.makedirs(valid_classes_paths[i])
 
 for i in range (len(valid_paths)):
     src = Path(train_paths[i])
