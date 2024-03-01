@@ -10,6 +10,7 @@ from sys import platform
 
 train_data_path = '/home/a/atpapadop/EMB/Dermnet/train'
 test_data_path = '/home/a/atpapadop/EMB/Dermnet/test'
+valid_data_path = '/home/a/atpapadop/EMB/Dermnet/valid'
 
 train_image_paths = []
 classes = []
@@ -24,19 +25,17 @@ for class_ in range(len(classes)):
     
 train_image_paths = list(flatten(train_image_paths))
 
-random.seed(2024)
-# Added random seed for reproducibility and for mean and std calculation to be consistent with the train dataset
-random.shuffle(train_image_paths)
+valid_image_paths = []
+for data_path in glob.glob(valid_data_path + '/*'):
+    valid_image_paths.append(glob.glob(data_path + '/*'))
 
-train_image_paths, valid_image_paths = train_image_paths[:int(0.8*len(train_image_paths))], train_image_paths[int(0.8*len(train_image_paths)):] 
-
+valid_image_paths = list(flatten(valid_image_paths))
 
 test_image_paths = []
 for data_path in glob.glob(test_data_path + '/*'):
     test_image_paths.append(glob.glob(data_path + '/*'))
 
 test_image_paths = list(flatten(test_image_paths))
-
 
 print("Train size: {}\nValid size: {}\nTest size: {}".format(len(train_image_paths), len(valid_image_paths), len(test_image_paths)))
 
