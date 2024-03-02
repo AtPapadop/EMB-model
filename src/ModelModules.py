@@ -51,7 +51,7 @@ def train_model(model, optimizer, criterion, scheduler, device, train_loader, nu
 def test_model(model, device, test_loader, PATH=None):
     # Load model depending on current device
     if PATH is not None:
-        if device == 'cpu':
+        if device == torch.device('cpu'):
             model.load_state_dict(torch.load(PATH, map_location=torch.device('cpu')))
         else:
             model.load_state_dict(torch.load(PATH))
