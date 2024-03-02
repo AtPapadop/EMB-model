@@ -32,7 +32,6 @@ def main(argv):
     from Dataset import test_dataset
     from torch.utils.data import DataLoader
     from ModelModules import test_model
-    from dataset_paths import platform
 
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
