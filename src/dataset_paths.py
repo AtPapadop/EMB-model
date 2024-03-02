@@ -6,7 +6,6 @@
 import glob
 import random
 from pandas.core.common import flatten
-from sys import platform
 
 train_data_path = '/home/a/atpapadop/EMB/Dermnet/train'
 test_data_path = '/home/a/atpapadop/EMB/Dermnet/test'
