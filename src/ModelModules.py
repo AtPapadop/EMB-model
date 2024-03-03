@@ -72,6 +72,6 @@ def test_model(model, device, test_loader, PATH=None):
             correct += (classifications == labels).sum()
             del inputs, labels, outputs, classifications
     
-    accuracy = 100 * correct / len(test_dataset)
+    accuracy = 100 * correct / len(test_loader)
     print(f'Accuracy: {accuracy:.4f}')
         
