@@ -8,23 +8,30 @@ import sys, getopt
 def main(argv):
     __learning_rate = __batch_size = __epochs = __scheduler = 0
     __output_file = ''
+    __model_type = ''
     __parallel = False
 
     try:
-        opts, args = getopt.getopt(argv, "hl:E:b:s:o:p", ["help", "learning-rate=", "epochs=", "batch-size=","scheduler=", "output-file=", "parallel"])
+        opts, args = getopt.getopt(argv, "hM:l:E:b:s:o:p", ["help", "model=", "learning-rate=", "epochs=", "batch-size=","scheduler=", "output-file=", "parallel"])
     except getopt.GetoptError():
         sys.exit(2)
     
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             print("Model_train.py -l <learning-rate> -E <epochs> -b <batch-size> -s <scheduler-rate> -o <output-file>")
+            print("-M --model       |  The model you want to train.\n Current options: Resnet50, Efficientnet_b0")
             print("-p --parallel   |  If you want to use multiple gpus")
-            print("Default values: Learning Rate: 0.001, Epochs: 100, Batch Size: 128, Scheduler Rate: 0.97, Output File: train_0")
+            print("Default values: Model: Resnet50, Learning Rate: 0.001, Epochs: 100, Batch Size: 128, Scheduler Rate: 0.97, Output File: train_0")
             sys.exit()
         if opt in ("-l", "--learning-rate"):
             __learning_rate = float(arg)
             if (__learning_rate > 1 or __learning_rate <= 0):
                 print("Invalid Learning Rate")
+                sys.exit(2)
+        elif opt in ("-M", "--model"):
+            __model_type = arg
+            if (__model_type != 'Resnet50' and __model_type != 'Efficientnet_b0'):
+                print("Invalid Model")
                 sys.exit(2)
         elif opt in ("-E", "--epochs"):
             __epochs = int(arg)
@@ -63,32 +70,35 @@ def main(argv):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     torch.cuda.empty_cache()
         
-    PATH = '/home/a/atpapadop/EMB/models/Resnet50/' 
+    PATH = '/home/a/atpapadop/EMB/models/' 
 
-    model_save = 'train_0' if __output_file == '' else __output_file
-    
-    SAVE_PATH = PATH + model_save
-    
-    del model_save
-    
+    model_type = __model_type if __model_type != '' else 'Resnet50'
     num_epochs = __epochs if __epochs != 0 else 100
     batch_size = __batch_size if __batch_size != 0 else 128
     initial_learning_rate = __learning_rate if __learning_rate != 0 else 0.001
     scheduler_rate = __scheduler if __scheduler != 0 else 0.97
+    model_save = 'train_0' if __output_file == '' else __output_file
     
-    print("Learning Rate: ", initial_learning_rate)
+    SAVE_PATH = PATH + model_type + '/' + model_save 
+    del model_save
+    
+    print("Model: ", model_type)
     print("Epochs: ", num_epochs)
     print("Batch Size: ", batch_size)
+    print("Learning Rate: ", initial_learning_rate)
     print("Scheduler: ", scheduler_rate)
-    print("Output File: ", SAVE_PATH)
     print("Parallel: ",__parallel)
+    print("Output File: ", SAVE_PATH)
     
-    model = torchvision.models.resnet50(weights = torchvision.models.ResNet50_Weights.IMAGENET1K_V2)
-    model.fc = torch.nn.Linear(2048, 23)
+
     
+    if model_type == 'Resnet50' :
+        from Models.Resnet50 import model
+    elif model_type == 'Efficientnet_b0' :
+        from Models.Efficientnet_b0 import model
+        
     if __parallel:
         model = torch.nn.DataParallel(model)
-        
     
     model = model.to(device)
     summary(model, (3,224,224))

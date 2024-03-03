@@ -16,13 +16,13 @@ def main(argv):
         
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print("Model_test.py -i <input-file>")
+            print("Model_test.py -i <input-file> | <input-file> should be of the form <model_type>/<model_name> e.g. Resnet50/train_0")
             print("-V (for validation mode)")
             sys.exit()
         elif opt in ("-i", "--input-file"):
             __input_file = arg
-            if (__input_file == ''):
-                print("Invalid Output File")
+            if (__input_file == '' or __input_file.count('/') != 1 or __input_file.split('/')[0] not in ['Resnet50', 'Efficientnet_b0'] or __input_file.split('/')[1] == ''):
+                print("Invalid Input File")
                 sys.exit(2)
         elif opt in ("-V", "--validate"):
             print("Validation Mode")
@@ -42,7 +42,7 @@ def main(argv):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     torch.cuda.empty_cache()
     
-    PATH = '/home/a/atpapadop/EMB/models/Resnet50/'
+    PATH = '/home/a/atpapadop/EMB/models/'
 
     model_load = 'train_0' if __input_file == '' else __input_file
     
