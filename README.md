@@ -3,7 +3,7 @@
 This repository is used for the management and distributions of the code used to train machine learning models for the EMB group
 
 - Source files (`src/`)
-- Python requirements [requirements.txt](/src/requirements.txt)
+- Python requirements [requirements.txt](requirements.txt)
 - Internal documentation material (`documentation/`)
 
 ## Contributing to `EMB-model`
