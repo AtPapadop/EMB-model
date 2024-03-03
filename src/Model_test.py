@@ -21,8 +21,8 @@ def main(argv):
             sys.exit()
         elif opt in ("-i", "--input-file"):
             __input_file = arg
-            if (__input_file == ''):
-                print("Invalid Output File")
+            if (__input_file == '' or __input_file.count('/') != 1 or __input_file.split('/')[0] not in ['Resnet50', 'Efficientnet_b0'] or __input_file.split('/')[1] == ''):
+                print("Invalid Input File")
                 sys.exit(2)
         elif opt in ("-V", "--validate"):
             print("Validation Mode")
