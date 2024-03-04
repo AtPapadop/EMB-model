@@ -64,6 +64,12 @@ First with the previous enviroment activated run:
     
 This will print out the command line options for each scripts
 
+If you want to see the paramatres that your python command will give to the model and verify that everything is correct simply comment out the line:
+
+    #train_model(model, optimizer, criterion, scheduler, device, train_loader, num_epochs, SAVE_PATH, valid_loader)
+
+in [Model_train.py](../src/Model_train.py)
+
 The submittion script that will tell `hpc` to run our code will be in the form of a bash (`.sh`) file as mentioned [here](https://hpc.it.auth.gr/jobs/job-submission/)
 
 An example script will be like so:
