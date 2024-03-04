@@ -6,7 +6,7 @@ The first thing we will need to do is send the Dermnet dataset to our home in HP
 
  An auth [vpn](https://it.auth.gr/manuals/eduvpn/) must be active for this to work!!
 
-After downloading the dataset locally from [https://www.kaggle.com/datasets/shubhamgoel27/dermnet](https://www.kaggle.com/datasets/shubhamgoel27/dermnet) locate the download directory and open an powershell terminal:
+After downloading the dataset locally from [https://www.kaggle.com/datasets/shubhamgoel27/dermnet](https://www.kaggle.com/datasets/shubhamgoel27/dermnet) locate the download directory and open a powershell terminal:
 
     scp .\archive.zip <username>@aristotle.it.auth.gr:~/
 
