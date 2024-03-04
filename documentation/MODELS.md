@@ -69,7 +69,7 @@ The submittion script that will tell `hpc` to run our code will be in the form o
 An example script will be like so:
 
     #!/bin/bash
-    #BATCH --job-name=EMB_model
+    #SBATCH --job-name=EMB_model
     #SBATCH --partition=ampere
     #SBATCH --gres=gpu:1
     #SBATCH --ntasks=16
