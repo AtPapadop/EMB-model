@@ -6,22 +6,27 @@
 import sys, getopt
 
 def main(argv):
-    __learning_rate = __batch_size = __epochs = __scheduler = 0
+    __learning_rate = __batch_size = __epochs = __scheduler_rate = 0
     __output_file = ''
     __model_type = ''
+    __optimizer = ''
+    __scheduler = ''
     __parallel = False
 
     try:
-        opts, args = getopt.getopt(argv, "hM:l:E:b:s:o:p", ["help", "model=", "learning-rate=", "epochs=", "batch-size=","scheduler=", "output-file=", "parallel"])
+        opts, args = getopt.getopt(argv, "hM:l:E:b:O:S:s:o:p", ["help", "model=", "learning-rate=", "epochs=", "batch-size=", "optimizer=", "scheduler=", "scheduler-rate=", "output-file=", "parallel"])
     except getopt.GetoptError():
         sys.exit(2)
     
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print("Model_train.py -l <learning-rate> -E <epochs> -b <batch-size> -s <scheduler-rate> -o <output-file>")
+            print("Model_train.py -l <learning-rate> -E <epochs> -b <batch-size> -o <output-file>")
             print("-M --model       |  The model you want to train.\n Current options: Resnet50, Efficientnet_b0")
+            print("-O --optimizer   |  The optimizer you want to use.\n Current options: adam, nadam, rmsprop, sgd")
+            print("-S --scheduler & -s --scheduler-param |  The scheduler you want to use and the decay rate of the scheduler.\n Current options: exp")
+            print("exp: For exponential scheduler the decay should be a single value between 0 and 1. This is the factor by which the learning rate will be multiplied every epoch")
             print("-p --parallel   |  If you want to use multiple gpus")
-            print("Default values: Model: Resnet50, Learning Rate: 0.001, Epochs: 100, Batch Size: 128, Scheduler Rate: 0.97, Output File: train_0")
+            print("Default values: Model: Resnet50, Optimizer: Adam, Learning Rate: 0.001, Epochs: 100, Batch Size: 128, Scheduler: None, Output File: train_0")
             sys.exit()
         if opt in ("-l", "--learning-rate"):
             __learning_rate = float(arg)
@@ -43,9 +48,19 @@ def main(argv):
             if (__batch_size <= 0):
                 print("Invalid Batch Size")
                 sys.exit(2)
-        elif opt in ("-s", "--scheduler"):
-            __scheduler = float(arg)
-            if (__scheduler > 1 or __scheduler <= 0):
+        elif opt in ("-O", "--optimizer"):
+            __optimizer = arg
+            if __optimizer not in ['adam', 'nadam', 'rmsprop', 'sgd']:
+                print("Invalid Optimizer")
+                sys.exit(2)
+        elif opt in ("-S", "--scheduler"):
+            __scheduler = arg
+            if __scheduler not in ['exp']:
+                print("Invalid Scheduler")
+                sys.exit(2)
+        elif opt in ("-s", "--scheduler-rate"):
+            __scheduler_rate = float(arg)
+            if (__scheduler_rate > 1 or __scheduler_rate <= 0):
                 print("Invalid Scheduler Rate")
                 sys.exit(2)
         elif opt in ("-o", "--output-file"):
@@ -73,20 +88,24 @@ def main(argv):
     PATH = '/home/a/atpapadop/EMB/models/' 
 
     model_type = __model_type if __model_type != '' else 'Resnet50'
+    optimizer_type = __optimizer if __optimizer != '' else 'adam'
+    scheduler_type = __scheduler if __scheduler != '' else 'None'
     num_epochs = __epochs if __epochs != 0 else 100
     batch_size = __batch_size if __batch_size != 0 else 128
     initial_learning_rate = __learning_rate if __learning_rate != 0 else 0.001
-    scheduler_rate = __scheduler if __scheduler != 0 else 0.97
+    scheduler_rate = __scheduler_rate if __scheduler_rate != 0 else 0.97
     model_save = 'train_0' if __output_file == '' else __output_file
     
     SAVE_PATH = PATH + model_type + '/' + model_save 
     del model_save
     
     print("Model: ", model_type)
+    print("Optimizer: ", optimizer_type)
     print("Epochs: ", num_epochs)
     print("Batch Size: ", batch_size)
     print("Learning Rate: ", initial_learning_rate)
-    print("Scheduler: ", scheduler_rate)
+    if scheduler_type != 'None':
+        print("Scheduler: ", scheduler_rate)
     print("Parallel: ",__parallel)
     print("Output File: ", SAVE_PATH)
     
@@ -109,8 +128,25 @@ def main(argv):
     
     
     criterion = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=initial_learning_rate)
-    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, scheduler_rate)
+
+    if optimizer_type == 'adam':
+        from Optimizers.Adam import get_optimizer
+        optimizer = get_optimizer(model, initial_learning_rate)
+    elif optimizer_type == 'nadam':
+        from Optimizers.NAdam import get_optimizer
+        optimizer = get_optimizer(model, initial_learning_rate)
+    elif optimizer_type == 'rmsprop':
+        from Optimizers.RMSprop import get_optimizer
+        optimizer = get_optimizer(model, initial_learning_rate)
+    elif optimizer_type == 'sgd':
+        from Optimizers.SGD import get_optimizer
+        optimizer = get_optimizer(model, initial_learning_rate)
+    
+    
+    if scheduler_type == 'exp':
+        scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, scheduler_rate)
+    elif scheduler_type == 'None':
+        scheduler = None
     
     train_model(model, optimizer, criterion, scheduler, device, train_loader, num_epochs, SAVE_PATH, valid_loader)
     
