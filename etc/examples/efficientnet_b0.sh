@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=EMB_resnet50
+#SBATCH --job-name=EMB_efficientnet_b0
 #SBATCH --partition=ampere
 #SBATCH --gres=gpu:1
 #SBATCH --ntasks=16
