@@ -119,7 +119,6 @@ def main(argv):
         model = torch.nn.DataParallel(model)
     
     model = model.to(device)
-    summary(model, (3,224,224))
     
     
     train_loader = DataLoader(train_dataset, batch_size, shuffle=True)
@@ -153,6 +152,7 @@ def main(argv):
         
     print("Output File: ", SAVE_PATH)
     
+    summary(model, (3,224,224))
     train_model(model, optimizer, criterion, scheduler, device, train_loader, num_epochs, SAVE_PATH, valid_loader)
     
     
