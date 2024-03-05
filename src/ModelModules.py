@@ -10,6 +10,7 @@ from Dataset import train_dataset, test_dataset
 def train_model(model, optimizer, criterion, scheduler, device, train_loader, num_epochs, PATH=None, valid_loader=None):
     for epoch in range(num_epochs):
         correct = 0
+        total_loss = 0
         for inputs, labels in (tqdm(train_loader)):
             # Move input and label tensors to the device
             inputs = inputs.to(device)
@@ -21,6 +22,7 @@ def train_model(model, optimizer, criterion, scheduler, device, train_loader, nu
             # Forward pass
             outputs = model(inputs)
             loss = criterion(outputs, labels)
+            total_loss += loss.item()
             classifications = torch.argmax(outputs, dim=1)
             correct += (classifications == labels).sum()
             del inputs, labels, outputs, classifications
@@ -34,7 +36,8 @@ def train_model(model, optimizer, criterion, scheduler, device, train_loader, nu
         
         # Calculate and print the average accuracy for every epoch
         accuracy = 100 * correct / len(train_dataset)
-        print(f'Epoch {epoch+1}/{num_epochs}, Loss: {loss.item():.4f}, Accuracy: {accuracy:.4f}')
+        avg_loss = total_loss / len(train_loader)
+        print(f'Epoch {epoch+1}/{num_epochs}, Loss: {avg_loss:.4f}, Accuracy: {accuracy:.4f}')
         
         # Print the validation accuracy for every 10 epochs
         if (valid_loader is not None and (epoch+1)%10==0):
@@ -59,6 +62,7 @@ def test_model(model, device, test_loader, PATH=None):
     # Set model to evaluation mode
     model.eval()
     correct = 0
+    total_loss = 0
     
     # Calculate the accuracy of the model
     with torch.no_grad():
@@ -68,11 +72,15 @@ def test_model(model, device, test_loader, PATH=None):
             labels = labels.to(device)
             
             outputs = model(inputs)
+            loss = criterion(outputs, labels)
+            total_loss += loss.item()
+            
             classifications = torch.argmax(outputs, dim=1)
             correct += (classifications == labels).sum()
             del inputs, labels, outputs, classifications
     
     model.train()
     accuracy = 100 * correct / len(test_loader)
-    print(f'Accuracy: {accuracy:.4f}')
+    avg_loss = total_loss / len(test_loader)
+    print(f'Accuracy: {accuracy:.4f}, Loss: {avg_loss:.4f}')
         
