@@ -42,10 +42,10 @@ Once you have both the dataset and the edited code on HPC run `Generate_valid.py
 Login via ssh as above and run the following commands:
 
     $ module load gcc/12.2.0 python/3.10.10
-    $ python3 -m venv ~/venv/pytorch-2.1.0
-    $ source ~/venv/pytorch-2.1.0/bin/activate
+    $ python3 -m venv ~/venv/pytorch-2.2.1
+    $ source ~/venv/pytorch-2.2.1/bin/activate
     $ pip install --upgrade pip
-    $ pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu118
+    $ pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
     
 
 To confirm everything was install correct run the command `python` and in the python terminal that opens enter `import torch`
