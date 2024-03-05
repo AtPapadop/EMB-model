@@ -81,7 +81,7 @@ An example script will be like so:
     #SBATCH --ntasks=16
     #SBATCH --time=6:00:00
 
-    source ~/venv/pytorch-2.1.0/bin/activate
+    source ~/venv/pytorch-2.2.1/bin/activate
 
     python3 ~/EMB/Code/Model_train.py -M Resnet50 -l 5e-4 -E 200 -b 128 -s 0.96 -o train_6
 
