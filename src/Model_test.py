@@ -53,10 +53,15 @@ def main(argv):
     LOAD_PATH = PATH + model_load
     print("Input File: ", LOAD_PATH)
     
-    del model_load
+    model_type = model_load.split('/')[0]
     
-    model = torchvision.models.resnet50(weights = torchvision.models.ResNet50_Weights.IMAGENET1K_V2)
-    model.fc = torch.nn.Linear(2048, 23)
+    if model_type == 'Resnet50':
+        from Models.Resnet50 import model
+    elif model_type == 'Efficientnet_b0':
+        from Models.Efficientnet_b0 import model
+    else:
+        print("Invalid Model Type")
+        sys.exit(2)
     
     model = model.to(device)
     
