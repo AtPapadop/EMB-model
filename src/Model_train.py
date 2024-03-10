@@ -21,7 +21,7 @@ def main(argv):
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             print("Model_train.py -l <learning-rate> -E <epochs> -b <batch-size> -o <output-file>\n")
-            print("-M --model       |  The model you want to train.\n Current options: Resnet50, Efficientnet_b0\n")
+            print("-M --model       |  The model you want to train.\n Current options: Resnet50, Resnet50_dropout, Efficientnet_b0\n")
             print("-O --optimizer   |  The optimizer you want to use.\n Current options: adam, nadam, rmsprop, sgd\n")
             print("-S --scheduler & -s --scheduler-args |  The scheduler you want to use and the arguments of the scheduler.\n Current options: exp, linear")
             print("exp: For exponential scheduler the argument should be \"(gamma=0.xy)\". This is the factor by which the learning rate will be multiplied every epoch")
@@ -38,7 +38,7 @@ def main(argv):
                 sys.exit(2)
         elif opt in ("-M", "--model"):
             __model_type = arg
-            if (__model_type != 'Resnet50' and __model_type != 'Efficientnet_b0'):
+            if (__model_type not in ['Resnet50', 'Resnet50_dropout', 'Efficientnet_b0']):
                 print("Invalid Model")
                 sys.exit(2)
         elif opt in ("-E", "--epochs"):
@@ -112,6 +112,8 @@ def main(argv):
     
     if model_type == 'Resnet50' :
         from Models.Resnet50 import model
+    elif model_type == 'Resnet50_dropout' :
+        from Models.Resnet50_dropout import model
     elif model_type == 'Efficientnet_b0' :
         from Models.Efficientnet_b0 import model
         
