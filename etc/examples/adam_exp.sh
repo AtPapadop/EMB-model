@@ -12,4 +12,3 @@ python3 ~/EMB/src/Model_train.py -M Resnet50 -O adam -S exp -s "(gamma=0.9)" -l 
 
 python3 ~/EMB/src/Model_test.py -i Resnet50/train_exp.pth
 # python3 ~/EMB/src/Model_test.py --input-file Resnet50/train_exp.pth
-```
