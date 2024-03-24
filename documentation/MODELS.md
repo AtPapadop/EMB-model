@@ -17,6 +17,8 @@ After that connect to HPC via ssh and unzip the archive:
     ssh <username>@aristotle.it.auth.gr
     unzip archive.zip
 
+Finally create the valid dataset using this [python script](/etc/dataset_setup/Generate_valid.py)
+
 
 
 
