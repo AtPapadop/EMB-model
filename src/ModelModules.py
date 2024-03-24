@@ -62,7 +62,7 @@ def test_model(model, device, test_loader, PATH=None):
     # Set model to evaluation mode
     model.eval()
     correct = 0
-    total_loss = 0
+    # total_loss = 0
     
     # Calculate the accuracy of the model
     with torch.no_grad():
@@ -72,8 +72,8 @@ def test_model(model, device, test_loader, PATH=None):
             labels = labels.to(device)
             
             outputs = model(inputs)
-            loss = criterion(outputs, labels)
-            total_loss += loss.item()
+            # loss = criterion(outputs, labels)
+            # total_loss += loss.item()
             
             classifications = torch.argmax(outputs, dim=1)
             correct += (classifications == labels).sum()
@@ -81,6 +81,6 @@ def test_model(model, device, test_loader, PATH=None):
     
     model.train()
     accuracy = 100 * correct / len(test_loader)
-    avg_loss = total_loss / len(test_loader)
-    print(f'Accuracy: {accuracy:.4f}, Loss: {avg_loss:.4f}')
+    # avg_loss = total_loss / len(test_loader)
+    print(f'Accuracy: {accuracy:.4f}')
         
