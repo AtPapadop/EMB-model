@@ -7,7 +7,7 @@
 
 source ~/venv/pytorch-2.2.1/bin/activate
 
-python3 ~/EMB/src/Continue_train.py -M Resnet50_dropout -O adam -l 1e-5 -E 100 -b 128 -i dropout.pth
+python3 ~/EMB/src/Model_cont_train.py -M Resnet50_dropout -O adam -l 1e-5 -E 100 -b 128 -i dropout.pth
 # python3 ~/EMB/src/Continue_train.py --model Resnet50_dropout --optimizer adam --learning-rate 1e-5 --epochs 100 --batch-size 128 --input-file dropout.pth
 
 python3 ~/EMB/src/Model_test.py -i Resnet50_dropout/dropout_cont.pth
