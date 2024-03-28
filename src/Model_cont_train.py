@@ -68,8 +68,8 @@ def main(argv):
                 sys.exit(2)
         elif opt in ("-i", "--input-file"):
             __input_file = arg
-            if (__input_file == ''):
-                print("Invalid Input File")
+            if (__input_file == '' or __input_file[len(__input_file)-4:] != '.pth'):
+                print("Invalid Output File\n Please provide a valid .pth file\n")
                 sys.exit(2)
         elif opt in ("-p", "--parallel"):
             __parallel = True
