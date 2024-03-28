@@ -5,7 +5,7 @@
 
 import torch
 from tqdm import tqdm
-from Dataset import train_dataset, test_dataset
+from Dataset import train_dataset
 
 def train_model(model, optimizer, criterion, scheduler, device, train_loader, num_epochs, PATH=None, valid_loader=None):
     for epoch in range(num_epochs):
@@ -51,7 +51,7 @@ def train_model(model, optimizer, criterion, scheduler, device, train_loader, nu
         else:
             torch.save(model.state_dict(), PATH)
         
-def test_model(model, device, test_loader, PATH=None):
+def test_model(model, device, loader, PATH=None):
     # Load model depending on current device
     if PATH is not None:
         if device == torch.device('cpu'):
@@ -66,7 +66,7 @@ def test_model(model, device, test_loader, PATH=None):
     
     # Calculate the accuracy of the model
     with torch.no_grad():
-        for inputs, labels in tqdm(test_loader):
+        for inputs, labels in tqdm(loader):
             
             inputs = inputs.to(device)
             labels = labels.to(device)
@@ -80,7 +80,7 @@ def test_model(model, device, test_loader, PATH=None):
             del inputs, labels, outputs, classifications
     
     model.train()
-    accuracy = 100 * correct / len(test_loader)
-    # avg_loss = total_loss / len(test_loader)
+    accuracy = 100 * correct / len(loader)
+    # avg_loss = total_loss / len(loader)
     print(f'Accuracy: {accuracy:.4f}')
         

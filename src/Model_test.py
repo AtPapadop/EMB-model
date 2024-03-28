@@ -32,13 +32,11 @@ def main(argv):
             sys.exit(2)
     
     import torch
-    import torchvision
     import gc
     from Dataset import test_dataset, valid_dataset
     from torch.utils.data import DataLoader
     from ModelModules import test_model
 
-    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     torch.cuda.empty_cache()
     
@@ -48,8 +46,7 @@ def main(argv):
     
     if model_load == 'Resnet50/train_0':
         print("No input file given. Using default model\n If this is done by mistake press Ctrl+C and give the correct input file to avoid overwriting the model.")
-    
-    
+     
     LOAD_PATH = PATH + model_load
     print("Input File: ", LOAD_PATH)
     
@@ -73,8 +70,7 @@ def main(argv):
         test_loader = DataLoader(test_dataset, shuffle=False)
     
     test_model(model, device, test_loader, LOAD_PATH)
-    
-    
+        
     del model
     torch.cuda.empty_cache()
     gc.collect()
