@@ -38,7 +38,7 @@ def main(argv):
                 sys.exit(2)
         elif opt in ("-M", "--model"):
             __model_type = arg
-            if (__model_type not in ['Resnet50', 'Resnet50_dropout', 'Efficientnet_b0']):
+            if (__model_type not in ['Resnet50', 'Resnet50_dropout', 'Efficientnet_b0', 'VGG16']):
                 print("Invalid Model")
                 sys.exit(2)
         elif opt in ("-E", "--epochs"):
@@ -68,8 +68,8 @@ def main(argv):
                 sys.exit(2)
         elif opt in ("-o", "--output-file"):
             __output_file = arg
-            if (__output_file == ''):
-                print("Invalid Output File")
+            if (__output_file == '' or __output_file[len(__output_file)-4:] != '.pth'):
+                print("Invalid Output File\n Please provide a valid .pth file\n")
                 sys.exit(2)
         elif opt in ("-p", "--parallel"):
             __parallel = True
@@ -98,7 +98,7 @@ def main(argv):
     model_save = 'train_0' if __output_file == '' else __output_file
     
     SAVE_PATH = PATH + model_type + '/' + model_save 
-    del model_save
+    del __learning_rate, __batch_size, __epochs, __output_file, __model_type, __optimizer, __scheduler, model_save
     
     print("Model: ", model_type)
     print("Optimizer: ", optimizer_type)
@@ -114,6 +114,8 @@ def main(argv):
         from Models.Resnet50_dropout import model
     elif model_type == 'Efficientnet_b0' :
         from Models.Efficientnet_b0 import model
+    elif model_type == 'VGG16' :
+        from Models.VGG16 import model
         
     if __parallel:
         model = torch.nn.DataParallel(model)
