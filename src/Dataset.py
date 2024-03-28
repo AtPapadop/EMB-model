@@ -4,7 +4,7 @@
 """
 
 import cv2
-import dataset_paths
+import image_paths
 import transforms
 from torch.utils.data import Dataset
 
@@ -22,14 +22,14 @@ class LoadDataset(Dataset):
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         
         label = image_filepath.split('/')[-2]
-        label = dataset_paths.class_to_idx[label]
+        label = image_paths.class_to_idx[label]
         if self.transform is not None:
             image = self.transform(image=image)["image"]
         
         return image, label
     
     
-train_dataset = LoadDataset(dataset_paths.train_image_paths, transforms.train_transforms)
-valid_dataset = LoadDataset(dataset_paths.valid_image_paths, transforms.test_transforms)
-test_dataset = LoadDataset(dataset_paths.test_image_paths, transforms.test_transforms)
+train_dataset = LoadDataset(image_paths.train_image_paths, transforms.train_transforms)
+valid_dataset = LoadDataset(image_paths.valid_image_paths, transforms.test_transforms)
+test_dataset = LoadDataset(image_paths.test_image_paths, transforms.test_transforms)
 

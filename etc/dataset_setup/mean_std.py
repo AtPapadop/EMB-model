@@ -5,7 +5,7 @@ Created on Fri Mar  1 16:00:44 2024
 @author: Thanasis
 """
 import torch
-from Dataset import train_dataset
+from ...src.Dataset import train_dataset
 from torch.utils.data import DataLoader
 
 
@@ -17,7 +17,6 @@ def get_mean_std(loader):
     psum  = torch.tensor([0.0, 0.0, 0.0])
     psum_sq = torch.tensor([0.0, 0.0, 0.0])
     for images, _ in loader:
-        batch_size, num_channels, height, width = images.shape
         psum += images.sum(axis = [0, 2, 3])
         psum_sq += (images ** 2).sum(axis = [0, 2, 3])
         
