@@ -7,20 +7,20 @@ import sys, getopt
 
 def main(argv):
     __learning_rate = __batch_size = __epochs = 0
-    __output_file = ''
+    __input_file = ''
     __model_type = ''
     __optimizer = ''
     __scheduler = __scheduler_args = ''
     __parallel = False
 
     try:
-        opts, args = getopt.getopt(argv, "hM:l:E:b:O:S:s:o:p", ["help", "model=", "learning-rate=", "epochs=", "batch-size=", "optimizer=", "scheduler=", "scheduler-args=", "output-file=", "parallel"])
+        opts, args = getopt.getopt(argv, "hM:l:E:b:O:S:s:i:p", ["help", "model=", "learning-rate=", "epochs=", "batch-size=", "optimizer=", "scheduler=", "scheduler-args=", "input-file=", "parallel"])
     except getopt.GetoptError():
         sys.exit(2)
     
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print("Model_train.py -l <learning-rate> -E <epochs> -b <batch-size> -o <output-file>\n")
+            print("Model_train.py -l <learning-rate> -E <epochs> -b <batch-size> -i <input-file>\n")
             print("-M --model       |  The model you want to train.\n Current options: Resnet50, Resnet50_dropout, Efficientnet_b0\n")
             print("-O --optimizer   |  The optimizer you want to use.\n Current options: adam, nadam, rmsprop, sgd\n")
             print("-S --scheduler & -s --scheduler-args |  The scheduler you want to use and the arguments of the scheduler.\n Current options: exp, linear")
@@ -29,7 +29,7 @@ def main(argv):
             print("start_lr: The initial learning rate\nend_lr: The final learning rate\niters: The number of iterations over which the learning rate will be linearly reduced to end_lr from start_lr\nBoth start_lr and end_lr should be given as a fraction of the initial learning rate\n")
             
             print("-p --parallel   |  If you want to use multiple gpus\n----------------------------------------------------------\n")
-            print("Default values: Model: Resnet50, Optimizer: Adam, Learning Rate: 0.001, Epochs: 100, Batch Size: 128, Scheduler: None, Output File: train_0")
+            print("Default values: Optimizer: Adam, Learning Rate: 0.001, Epochs: 100, Batch Size: 128, Scheduler: None")
             sys.exit()
         if opt in ("-l", "--learning-rate"):
             __learning_rate = float(arg)
@@ -66,10 +66,10 @@ def main(argv):
             if (__scheduler_args == '' or (__scheduler_args[0] != '(' and __scheduler_args[len(__scheduler_args)-1] != ')')):
                 print("Invalid Scheduler Arguments")
                 sys.exit(2)
-        elif opt in ("-o", "--output-file"):
-            __output_file = arg
-            if (__output_file == ''):
-                print("Invalid Output File")
+        elif opt in ("-i", "--input-file"):
+            __input_file = arg
+            if (__input_file == ''):
+                print("Invalid Input File")
                 sys.exit(2)
         elif opt in ("-p", "--parallel"):
             __parallel = True
@@ -77,12 +77,20 @@ def main(argv):
             print("Unknown Command-line arguement")
             sys.exit(2)
             
+    if __input_file == '':
+        print("No input file given")
+        sys.exit(2)
+    
+    if __model_type == '':
+        print("No model given")
+        sys.exit(2)
+    
     import torch
     import gc
     from torchsummary import summary
     from Dataset import train_dataset, valid_dataset
     from torch.utils.data import DataLoader
-    from ModelModules import train_model
+    from ModelModules import train_model, test_model
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     torch.cuda.empty_cache()
@@ -95,10 +103,11 @@ def main(argv):
     num_epochs = __epochs if __epochs != 0 else 100
     batch_size = __batch_size if __batch_size != 0 else 128
     initial_learning_rate = __learning_rate if __learning_rate != 0 else 0.001
-    model_save = 'train_0' if __output_file == '' else __output_file
+    model_load = __input_file
     
-    SAVE_PATH = PATH + model_type + '/' + model_save 
-    del model_save
+    LOAD_PATH = PATH + model_type + '/' + model_load 
+    SAVE_PATH = LOAD_PATH.strip('.pth') + '_cont.pth'
+    del model_load
     
     print("Model: ", model_type)
     print("Optimizer: ", optimizer_type)
@@ -107,7 +116,7 @@ def main(argv):
     print("Learning Rate: ", initial_learning_rate)
     print("Scheduler: ", scheduler_type)
     print("Parallel: ",__parallel)
-     
+    
     if model_type == 'Resnet50' :
         from Models.Resnet50 import model
     elif model_type == 'Resnet50_dropout' :
@@ -119,10 +128,10 @@ def main(argv):
         model = torch.nn.DataParallel(model)
     
     model = model.to(device)
-    
+
     train_loader = DataLoader(train_dataset, batch_size, shuffle=True)
     valid_loader = DataLoader(valid_dataset, shuffle=False)
-     
+       
     criterion = torch.nn.CrossEntropyLoss()
 
     if optimizer_type == 'adam':
@@ -147,11 +156,20 @@ def main(argv):
     elif scheduler_type == 'None':
         scheduler = None
         
+    print("Input File: ", LOAD_PATH)
     print("Output File: ", SAVE_PATH)
     
     summary(model, (3,224,224))
-    train_model(model, optimizer, criterion, scheduler, device, train_loader, num_epochs, SAVE_PATH, valid_loader)
     
+    if device == torch.device('cpu'):
+        model.load_state_dict(torch.load(LOAD_PATH, map_location=torch.device('cpu')))
+    else:
+        model.load_state_dict(torch.load(LOAD_PATH))
+    
+    print("Initial Accuracy on Validation Set")
+    test_model(model, device, valid_loader)
+    train_model(model, optimizer, criterion, scheduler, device, train_loader, num_epochs, SAVE_PATH, valid_loader)
+     
     del model, criterion, optimizer, scheduler
     torch.cuda.empty_cache()
     gc.collect()

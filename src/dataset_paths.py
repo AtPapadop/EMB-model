@@ -4,7 +4,6 @@
 """
 
 import glob
-import random
 from pandas.core.common import flatten
 
 train_data_path = '/home/a/atpapadop/EMB/Dermnet/train'
