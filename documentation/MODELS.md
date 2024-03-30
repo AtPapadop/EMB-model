@@ -26,7 +26,7 @@ Finally create the valid dataset using this [python script](/etc/dataset_setup/G
 
 Download the code from this repo using git clone
 
-1. Edit `train_data_path` and `test_data_path` in [dataset_path.py](/src/image_paths.py) 
+1. Edit `train_data_path` and `test_data_path` in [image_paths.py](/src/image_paths.py) 
 1. Edit `PATH` in [Model_train.py](/src/Model_train.py) and [Model_test.py](/src/Model_test.py) 
 1. Edit `train_data_path` and `valid_data_path` in [Generate_valid.py](/etc/dataset_setup/Generate_valid.py)
 
