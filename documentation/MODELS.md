@@ -24,18 +24,13 @@ Finally create the valid dataset using this [python script](/etc/dataset_setup/G
 
 ## Send Code to HPC
 
-Download the code from `src/` and `etc/dataset_setup/`
+Download the code from this repo using git clone
 
-Before sending the code you may need to make some changes to the code to suit your enviroment:
-
-1. Edit `train_data_path` and `test_data_path` in [dataset_path.py](/src/dataset_paths.py) 
+1. Edit `train_data_path` and `test_data_path` in [dataset_path.py](/src/image_paths.py) 
 1. Edit `PATH` in [Model_train.py](/src/Model_train.py) and [Model_test.py](/src/Model_test.py) 
 1. Edit `train_data_path` and `valid_data_path` in [Generate_valid.py](/etc/dataset_setup/Generate_valid.py)
 
-Alternatively you can send the code as is and use the `vim` editor inside `HPC`. You can follow the guides found here: 
-[Getting started with Vim: The basics](https://opensource.com/article/19/3/getting-started-vim)
-
-Similarly with above send it to HPC via `scp` (you may need to zip it first)
+Edit the files using the `vim` editor. You can follow the guides found here: [Getting started with Vim: The basics](https://opensource.com/article/19/3/getting-started-vim)
 
 Once you have both the dataset and the edited code on HPC run `Generate_valid.py` to generate the valid dataset
 
