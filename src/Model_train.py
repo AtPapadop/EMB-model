@@ -21,7 +21,7 @@ def main(argv):
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             print("Model_train.py -l <learning-rate> -E <epochs> -b <batch-size> -o <output-file>\n")
-            print("-M --model       |  The model you want to train.\n Current options: Resnet50, Resnet50_dropout, Efficientnet_b0\n")
+            print("-M --model       |  The model you want to train.\n Current options: Resnet50, Resnet50_dropout, Efficientnet_b0, VGG16\n")
             print("-O --optimizer   |  The optimizer you want to use.\n Current options: adam, nadam, rmsprop, sgd\n")
             print("-S --scheduler & -s --scheduler-args |  The scheduler you want to use and the arguments of the scheduler.\n Current options: exp, linear")
             print("exp: For exponential scheduler the argument should be \"(gamma=0.xy)\". This is the factor by which the learning rate will be multiplied every epoch")
