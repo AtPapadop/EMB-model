@@ -29,7 +29,7 @@ nvidia-nvtx-cu11==11.8.86
 opencv-python-headless==4.9.0.80
 packaging==23.2
 pandas==2.2.1
-pillow==10.2.0
+pillow==10.3.0
 pyparsing==3.1.1
 python-dateutil==2.9.0.post0
 pytz==2024.1
